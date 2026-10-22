@@ -5,11 +5,20 @@ const rl = readline.createInterface({ input, output });
 // 🚫 No eliminar las líneas de arriba ⬆️
 
 // ✍️ Escribe tu código aquí 👇
-const tasks: string[] = [];
+interface Task {   // interface son las caracteristicas de las tareas (tasks)
+  id: number;
+  title: string;
+  completed: boolean;
+}
 
+// Pendiente: completar el punto 4 creando arrow functions para agregar, eliminar y listar tareas.
+
+const tasks: Task[] = [];
+let nextTaskId = 1; // creando la variable nextTaskId nos aseguramos de que las tareas se enumeren con un id.
 let running: boolean = true;
 
-while (running) {
+
+while (running) {  // while Repite el menú hasta que se elija salir.
   console.log('--- Menú de tareas ---');
   console.log('1. Agregar tarea');
   console.log('2. Eliminar última tarea');
@@ -19,7 +28,12 @@ while (running) {
   const answer = await rl.question("Elige una opción: ");
   if (answer === '1') {
   const title = await rl.question('Escribe el título de la tarea: ');
-  tasks.push(title);
+  tasks.push({
+  id: nextTaskId,
+  title: title,
+  completed: false,
+});
+nextTaskId++; // agregamos a la variable creada anteriormente un contador ++ para que vaya sumando el orden mientras aprendemos bases de datos.
   console.log('Tarea agregada.');
 }
 
