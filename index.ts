@@ -45,18 +45,23 @@ const listTasks = () => {
     return;
   }
 
-  for (const task of tasks) {
-    let status: string;
+const formattedTasks = tasks.map(({ id, title, completed }) => {
+  let status: string;
 
-    if (task.completed) {
-      status = 'completada';
-    } else {
-      status = 'pendiente';
-    }
-
-    console.log(`[${task.id}] ${task.title} - ${status}`);
+  if (completed) {
+    status = 'completada';
+  } else {
+    status = 'pendiente';
   }
+
+  return `[${id}] ${title} - ${status}`;
+});
+formattedTasks.forEach((line) => {
+  console.log(line);
+});
 };
+
+
 // Busca una tarea por su ID y, si existe, la marca como completada.
 const markCompleted = (id: number) => {
   const task = tasks.find((task) => task.id === id);
@@ -83,6 +88,9 @@ while (running) {
   console.log('2. Eliminar última tarea');
   console.log('3. Listar tareas');
   console.log('4. Salir');
+  console.log('5. Marcar tarea como completada');
+  console.log('6. Ver tareas pendientes');
+  console.log('7. Ver tareas completadas');
 
   const answer = await rl.question('Elige una opción: ');
 
@@ -101,6 +109,40 @@ while (running) {
 
   if (answer === '4') {
     running = false;
+  }
+
+  if (answer === '5') {
+  const idAnswer = await rl.question('Escribe el ID de la tarea: ');
+  const id = Number(idAnswer);
+
+  if (Number.isNaN(id)) {
+    console.log('Escribe un ID numérico.');
+  } else {
+    markCompleted(id);
+  }
+}
+
+  if (answer === '6') {
+  const pendingTasks = filterPending();
+
+  if (pendingTasks.length === 0) {
+    console.log('No hay tareas pendientes.');
+  } else {
+    pendingTasks.forEach((task) => {
+      console.log(`[${task.id}] ${task.title} - pendiente`);
+    });
+  }
+}
+  if (answer === '7') {
+    const completedTasks = filterCompleted();
+
+    if (completedTasks.length === 0) {
+      console.log('No hay tareas completadas.');
+    } else {
+      completedTasks.forEach((task) => {
+        console.log(`[${task.id}] ${task.title} - completada`);
+      });
+    }
   }
 }
 
