@@ -57,7 +57,25 @@ const listTasks = () => {
     console.log(`[${task.id}] ${task.title} - ${status}`);
   }
 };
+// Busca una tarea por su ID y, si existe, la marca como completada.
+const markCompleted = (id: number) => {
+  const task = tasks.find((task) => task.id === id);
 
+  if (task !== undefined) {
+    task.completed = true;
+    console.log(`Tarea ${task.id}: ${task.title} completada.`);
+  } else {
+    console.log(`No se encontró la tarea con ID ${id}.`);
+  }
+};
+// Devuelve una nueva lista con solo las tareas pendientes.
+const filterPending = () => {
+  return tasks.filter((task) => task.completed === false);
+};
+// Devuelve una nueva lista con solo las tareas completadas.
+const filterCompleted = () => {
+  return tasks.filter((task) => task.completed === true);
+};
 // Repite el menú hasta que el usuario elija salir.
 while (running) {
   console.log('--- Menú de tareas ---');
