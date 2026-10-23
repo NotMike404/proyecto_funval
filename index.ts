@@ -5,61 +5,85 @@ const rl = readline.createInterface({ input, output });
 // 🚫 No eliminar las líneas de arriba ⬆️
 
 // ✍️ Escribe tu código aquí 👇
-interface Task {   // interface son las caracteristicas de las tareas (tasks)
+interface Task {
   id: number;
   title: string;
   completed: boolean;
 }
 
-// Pendiente: completar el punto 4 creando arrow functions para agregar, eliminar y listar tareas.
-
 const tasks: Task[] = [];
-let nextTaskId = 1; // creando la variable nextTaskId nos aseguramos de que las tareas se enumeren con un id.
-let running: boolean = true;
+let nextTaskId = 1;
+let running = true;
 
+// Crea una tarea pendiente y prepara el siguiente ID.
+const addTask = (title: string) => {
+  tasks.push({
+    id: nextTaskId,
+    title: title,
+    completed: false,
+  });
 
-while (running) {  // while Repite el menú hasta que se elija salir.
+  nextTaskId++;
+  console.log('Tarea agregada.');
+};
+
+// Elimina la última tarea y muestra su título.
+const removeTask = () => {
+  const removedTask = tasks.pop();
+
+  if (removedTask === undefined) {
+    console.log('No hay tareas para eliminar.');
+  } else {
+    console.log(`Tarea eliminada: ${removedTask.title}`);
+  }
+};
+
+// Lista cada tarea con su ID, título y estado.
+const listTasks = () => {
+  if (tasks.length === 0) {
+    console.log('Todavía no hay tareas.');
+    return;
+  }
+
+  for (const task of tasks) {
+    let status: string;
+
+    if (task.completed) {
+      status = 'completada';
+    } else {
+      status = 'pendiente';
+    }
+
+    console.log(`[${task.id}] ${task.title} - ${status}`);
+  }
+};
+
+// Repite el menú hasta que el usuario elija salir.
+while (running) {
   console.log('--- Menú de tareas ---');
   console.log('1. Agregar tarea');
   console.log('2. Eliminar última tarea');
   console.log('3. Listar tareas');
   console.log('4. Salir');
 
-  const answer = await rl.question("Elige una opción: ");
+  const answer = await rl.question('Elige una opción: ');
+
   if (answer === '1') {
-  const title = await rl.question('Escribe el título de la tarea: ');
-  tasks.push({
-  id: nextTaskId,
-  title: title,
-  completed: false,
-});
-nextTaskId++; // agregamos a la variable creada anteriormente un contador ++ para que vaya sumando el orden mientras aprendemos bases de datos.
-  console.log('Tarea agregada.');
-}
-
-if (answer === '2') {
-  const removedTask = tasks.pop();
-
-  if (removedTask === undefined) {
-    console.log('No hay tareas para eliminar.');
-  } else {
-    console.log(`Tarea eliminada: ${removedTask}`);
+    const title = await rl.question('Escribe el título de la tarea: ');
+    addTask(title);
   }
-}
 
-if (answer === '3') {
-  if (tasks.length === 0) {
-    console.log('Todavía no hay tareas.');
-  } else {
-    for (let i = 0; i < tasks.length; i++) {
-      console.log(`${i + 1}. ${tasks[i]}`);
-    }
+  if (answer === '2') {
+    removeTask();
   }
-}
+
+  if (answer === '3') {
+    listTasks();
+  }
 
   if (answer === '4') {
-  running = false;
-}
+    running = false;
+  }
 }
 
 // 🚫 No eliminar las líneas de abajo ⬇️
