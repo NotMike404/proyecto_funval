@@ -15,16 +15,36 @@ const tasks: Task[] = [];
 let nextTaskId = 1;
 let running = true;
 
-// Crea una tarea pendiente y prepara el siguiente ID.
-const addTask = (title: string) => {
-  tasks.push({
-    id: nextTaskId,
-    title: title,
-    completed: false,
+// esto simula el tiempo que tomaría guardar datos en un servidor real.
+const saveToDB = (task: Task): Promise<void> => {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      console.log(`Tarea guardada: ${task.title}`);
+      resolve();
+    }, 2000);
   });
+};
+const addTask = async (title: string) => {
+  try {
+    if (title.trim() === '') {
+      throw new Error('El título no puede estar vacío.');
+    }
 
-  nextTaskId++;
-  console.log('Tarea agregada.');
+    const task: Task = {
+      id: nextTaskId,
+      title: title,
+      completed: false,
+    };
+
+    await saveToDB(task);
+    tasks.push(task);
+    nextTaskId++; // Prepara el ID para la próxima tarea.
+    console.log('Tarea agregada.');
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.message);
+    }
+  }
 };
 
 // Elimina la última tarea y muestra su título.
@@ -61,7 +81,6 @@ formattedTasks.forEach((line) => {
 });
 };
 
-
 // Busca una tarea por su ID y, si existe, la marca como completada.
 const markCompleted = (id: number) => {
   const task = tasks.find((task) => task.id === id);
@@ -96,7 +115,7 @@ while (running) {
 
   if (answer === '1') {
     const title = await rl.question('Escribe el título de la tarea: ');
-    addTask(title);
+    await addTask(title);
   }
 
   if (answer === '2') {
